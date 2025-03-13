@@ -21,13 +21,13 @@ const App = () => {
 
 	// Сбросить настройки
 	const handleReset = () => {
-		setFormState(defaultArticleState); // Сбрасываем formState
-		setPageState(defaultArticleState); // Сбрасываем pageState
+		setFormState(defaultArticleState);
+		setPageState(defaultArticleState);
 	};
 
 	// Применить настройки (копируем formState в pageState)
 	const handleApply = () => {
-		setPageState(formState); // Копируем formState в pageState
+		setPageState(formState);
 		console.log('Настройки применены:', formState);
 	};
 
