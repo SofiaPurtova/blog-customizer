@@ -4,10 +4,7 @@ import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
-import {
-	defaultArticleState,
-	ArticleStateType,
-} from './constants/articleProps'; // Импортируем ArticleStateType
+import { defaultArticleState } from './constants/articleProps'; // Импортируем ArticleStateType
 
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
@@ -17,10 +14,6 @@ const root = createRoot(domNode);
 
 const App = () => {
 	const [pageState, setPageState] = useState(defaultArticleState);
-
-	const handleApply = (state: ArticleStateType) => {
-		setPageState(state); // Применяем настройки
-	};
 
 	return (
 		<main
@@ -34,7 +27,7 @@ const App = () => {
 					'--bg-color': pageState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm onApply={handleApply} />
+			<ArticleParamsForm setPageState={setPageState} />
 			<Article />
 		</main>
 	);

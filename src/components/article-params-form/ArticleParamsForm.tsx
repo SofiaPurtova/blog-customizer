@@ -19,36 +19,17 @@ import clsx from 'clsx';
 import styles from './ArticleParamsForm.module.scss';
 
 type ArticleParamsFormProps = {
-	onApply: (state: ArticleStateType) => void; // Передаём настройки в App
+	setPageState: (state: ArticleStateType) => void;
 };
 
-export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ setPageState }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [formState, setFormState] = useState(defaultArticleState);
 	const sidebarRef = useRef<HTMLDivElement>(null); // Ref для сайдбара
 
-	const handleToggle = (e: React.MouseEvent) => {
-		e.stopPropagation(); // Останавливаем всплытие события
-		setIsOpen(!isOpen);
-	};
-
-	const handleReset = () => {
-		setFormState(defaultArticleState); // Сбрасываем настройки
-		setIsOpen(false);
-	};
-
-	const handleApply = () => {
-		onApply(formState); // Передаём настройки в App
-		setIsOpen(false);
-	};
-
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault(); // Предотвращаем перезагрузку страницы
-		handleApply(); // Вызываем handleApply
-	};
-
-	// Закрытие сайдбара по клику за пределами
 	useEffect(() => {
+		if (!isOpen) return; // Выходим, если сайдбар закрыт
+
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
 				sidebarRef.current &&
@@ -58,14 +39,28 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 			}
 		};
 
-		if (isOpen) {
-			document.addEventListener('click', handleClickOutside); // Добавляем обработчик при открытии
-		}
+		document.addEventListener('mousedown', handleClickOutside); // Добавляем обработчик при открытии
 
 		return () => {
-			document.removeEventListener('click', handleClickOutside); // Удаляем обработчик при закрытии
+			document.removeEventListener('mousedown', handleClickOutside); // Удаляем обработчик при закрытии
 		};
-	}, [isOpen]); // Зависимость от isOpen
+	}, [isOpen]);
+
+	const handleToggle = () => {
+		setIsOpen((prev) => !prev);
+	};
+
+	const handleReset = () => {
+		setFormState(defaultArticleState); // Сбрасываем настройки
+		setPageState(defaultArticleState);
+		setIsOpen(false);
+	};
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault(); // Предотвращаем перезагрузку страницы
+		setPageState(formState); // Передаём настройки в App
+		setIsOpen(false);
+	};
 
 	return (
 		<>
